@@ -1,4 +1,5 @@
+import { Vec2 } from "./vec2.js";
 export interface SweepResult {
-    distance: number;
+    end: Vec2;
     collision: boolean;
 }

@@ -12,7 +12,6 @@ class StaticEnvironment{
 
     draw(canvas) {
         let ctx = canvas.getContext("2d");
-
         ctx.fillStyle = "#5A7775";
         ctx.beginPath();
         ctx.rect(0, this.bedrockLevel, canvas.width, canvas.height - this.bedrockLevel);
@@ -20,11 +19,10 @@ class StaticEnvironment{
     }
 
     sweepCircle(radius: number, start: Vec2, end: Vec2): SweepResult {
-        if(end.y > this.bedrockLevel) {
-            const blockedEnd = new Vec2(end.x, this.bedrockLevel);
-            const d = start.distance(blockedEnd);
-            return {distance: d, collision: true};
+        if(end.y + radius > this.bedrockLevel) {
+            const blockedEnd = new Vec2(end.x, this.bedrockLevel - radius);
+            return {end: blockedEnd, collision: true};
         }
-        return {distance: start.subtract(end).length(), collision: false};
+        return {end: end, collision: false};
     }
 }

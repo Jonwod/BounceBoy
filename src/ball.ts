@@ -13,17 +13,36 @@ class Ball {
         this.velocity = new Vec2(0,0);
     }
 
-    update(dt) {
+    update(deltaTime) {
+        let dt = deltaTime;
+        const itrLimit = 5;
+        let itrs = 0;
+        while(dt > 0  &&  ++itrs <= itrLimit) {
+            dt = this.move(dt);
+        }
+        console.log("used " + itrs + " itrs for ball collision");
+    }
+
+    /**
+     * Applies movement update up until collision.
+     * @returns The remaining unused time of the input dt, after the first collision
+     */
+    move(deltaTime) {
+        let dt = deltaTime;
         this.velocity.y += constants.g * dt;
         const end = this.position.add(this.velocity.scaled(dt));
         const result = sweepCircle(this.radius, this.position, end);
         if(result.collision) {
+            const distanceToCol = result.end.subtract(this.position).length();
+            const partialDt = distanceToCol / Math.abs(this.velocity.y);
+            dt -= partialDt;
+            this.position = result.end;
             this.velocity.y *= -1;
-            const offset = end.subtract(this.position);
-            this.position = this.position.add(offset.normalized().scaled(result.distance));
         } else {
             this.position = end;
+            dt = 0;
         }
+        return dt;
     }
 
     draw(canvas) {
