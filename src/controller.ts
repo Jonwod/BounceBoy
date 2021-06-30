@@ -8,7 +8,7 @@ export class Controller {
     constructor(ball: Ball) {
         this.myBall = ball;
         document.addEventListener("keydown", e => this.keyDown(e));
-        document.addEventListener("keyup", e => this.keyDown(e));
+        document.addEventListener("keyup", e => this.keyUp(e));
     }
 
     private keyDown(e) {
@@ -30,5 +30,6 @@ export class Controller {
 
     update(dt) {
         this.myBall.velocity.x += this.horizontalInput * this.horizontalAccel * dt;
+        console.log(this.horizontalInput);
     }
 }
