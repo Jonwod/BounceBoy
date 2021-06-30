@@ -6,6 +6,8 @@ class Ball {
     position: Vec2;
     velocity: Vec2;
     radius: number;
+    // 'air restistance' force per unit speed for x axis
+    private xResistance = 1;
 
     constructor(radius: number, position: Vec2) {
         this.radius = radius;
@@ -15,21 +17,25 @@ class Ball {
 
     update(deltaTime) {
         let dt = deltaTime;
+        this.velocity.y += constants.g * dt;
+        const restistanceDeltaV = -this.velocity.x * this.xResistance * dt;
+        this.velocity.x = (Math.abs(restistanceDeltaV) > Math.abs(this.velocity.x)) 
+            ? 0 : this.velocity.x + restistanceDeltaV;
+        
         const itrLimit = 5;
         let itrs = 0;
         while(dt > 0  &&  ++itrs <= itrLimit) {
             dt = this.move(dt);
         }
-        console.log("used " + itrs + " itrs for ball collision");
+        // console.log("used " + itrs + " itrs for ball collision");
     }
 
     /**
      * Applies movement update up until collision.
      * @returns The remaining unused time of the input dt, after the first collision
      */
-    move(deltaTime) {
+    private move(deltaTime) {
         let dt = deltaTime;
-        this.velocity.y += constants.g * dt;
         const end = this.position.add(this.velocity.scaled(dt));
         const result = sweepCircle(this.radius, this.position, end);
         if(result.collision) {

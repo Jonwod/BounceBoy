@@ -2,6 +2,7 @@ import {Ball} from "./ball.js";
 import { StaticEnvironment } from "./staticEnvironment.js";
 import { SweepResult } from "./collision.js";
 import { Vec2 } from "./vec2.js";
+import {Controller} from "./controller.js";
 export {draw, update, constants, sweepCircle};
 
 const constants = {
@@ -9,9 +10,11 @@ const constants = {
 }
 
 let ball = new Ball(20, new Vec2(200, 100));
+let controller = new Controller(ball);
 let env = new StaticEnvironment(460);
 
 function update(dt) {
+    controller.update(dt);
     ball.update(dt);
 }
 
